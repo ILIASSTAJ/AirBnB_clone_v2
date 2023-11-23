@@ -1,28 +1,29 @@
 #!/usr/bin/python3
-""" class User"""
-
+"""This is the user class"""
 from models.base_model import BaseModel, Base
-from os import getenv
-from sqlalchemy.orm import relationship
-from sqlalchemy import Column
-from sqlalchemy import String
+from sqlalchemy import Column, Integer, String, ForeignKey, MetaData
+from sqlalchemy.orm import relationship, backref
 
 
 class User(BaseModel, Base):
-    """class that represents user
-    Atrributes:
-        __tablename__: name for sql table
-        email: user email address.
-        passwd: user's password.
-        f_name: user's first name
-        l_name: user's last name
-        places: user-pace relationship
-        reviews: user-review"""
-    if getenv('HBNB_TYPE_STORAGE') == 'db':
-        __tablename__ = "users"
-        email = Column(String(128), nullable=False)
-        passwd = Column(String(128), nullable=False)
-        f_name = Column(String(128), nullable=True)
-        l_name = Column(String(128), nullable=True)
-        places = relationship("Place", backref="user", cascade="delete")
-        reviews = relationship("Review", backref="user", cascade="delete")
+    """This is the class for user
+    Attributes:
+        email: email address
+        password: password for you login
+        first_name: first name
+        last_name: last name
+    """
+
+    __tablename__ = 'users'
+    email = Column(String(128), nullable=False)
+    password = Column(String(128), nullable=False)
+    first_name = Column(String(128))
+    last_name = Column(String(128))
+
+    places = relationship("Place",
+                          backref="user",
+                          cascade="all, delete, delete-orphan")
+
+    reviews = relationship("Review",
+                           backref="user",
+                           cascade="all, delete, delete-orphan")
